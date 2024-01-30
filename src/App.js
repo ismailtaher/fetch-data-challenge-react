@@ -1,23 +1,58 @@
-import logo from './logo.svg';
-import './App.css';
+import Header from "./Header";
+import Content from "./Content";
+import { useEffect, useState } from "react";
 
 function App() {
+  const API_URL = "https://jsonplaceholder.typicode.com";
+  const [items, setItems] = useState([]);
+  const [dataType, setDataType] = useState("users");
+  const [fetchError, setFetchError] = useState(null);
+  const [tabStyle, setTabStyle] = useState("light");
+
+  useEffect(() => {
+    const fetchItems = async () => {
+      try {
+        const response = await fetch(`${API_URL}/${dataType}`);
+        if (!response.ok) throw Error("Error Occured");
+        const listItems = await response.json();
+        setItems(listItems);
+        setFetchError(null);
+      } catch (err) {
+        setFetchError(err.message);
+      }
+    };
+
+    fetchItems();
+  }, [dataType]);
+
+  const handleClick = (dataInput) => {
+    setDataType(dataInput);
+    changeStyle();
+  };
+
+  const changeStyle = () => {
+    if (tabStyle !== "light") {
+      setTabStyle("dark");
+    } else {
+      setTabStyle("light");
+    }
+    console.log(tabStyle);
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <Header dataType={dataType} handleClick={handleClick}></Header>
+      <main>
+        {fetchError && (
+          <p
+            style={{
+              color: "red",
+            }}>{`Error: ${fetchError}`}</p>
+        )}
+        {!fetchError && (
+          <Content items={items} fetchError={fetchError}></Content>
+        )}
+      </main>
     </div>
   );
 }
