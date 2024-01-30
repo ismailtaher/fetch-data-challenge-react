@@ -15,6 +15,7 @@ function App() {
         const response = await fetch(`${API_URL}/${dataType}`);
         if (!response.ok) throw Error("Error Occured");
         const listItems = await response.json();
+        console.log(listItems);
         setItems(listItems);
         setFetchError(null);
       } catch (err) {
@@ -50,7 +51,10 @@ function App() {
             }}>{`Error: ${fetchError}`}</p>
         )}
         {!fetchError && (
-          <Content items={items} fetchError={fetchError}></Content>
+          <Content
+            items={items}
+            fetchError={fetchError}
+            dataType={dataType}></Content>
         )}
       </main>
     </div>
