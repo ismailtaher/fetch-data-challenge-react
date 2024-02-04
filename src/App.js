@@ -1,6 +1,7 @@
 import Header from "./Header";
 import Content from "./Content";
 import { useEffect, useState } from "react";
+import Table from "./Table";
 
 function App() {
   const API_URL = "https://jsonplaceholder.typicode.com";
@@ -50,12 +51,7 @@ function App() {
               color: "red",
             }}>{`Error: ${fetchError}`}</p>
         )}
-        {!fetchError && (
-          <Content
-            items={items}
-            fetchError={fetchError}
-            dataType={dataType}></Content>
-        )}
+        {!fetchError && <Table items={items}> </Table>}
       </main>
     </div>
   );
